@@ -1,0 +1,55 @@
+@import './reset.css';
+@import './colors.css';
+@import './transitions.css';
+
+:root {
+  --min-content-width: 50ch;
+  --max-content-width: 80ch;
+}
+
+#app {
+  min-width: 100vw;
+  min-height: 100vh;
+
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 18px;
+}
+
+a, p, h1, h2, h3, h4, h5 {
+  line-height: 1.5;
+}
+
+p:not(:first-of-type){
+  margin-top: 1em;
+}
+
+a, a:link, a:visited{
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+a::after{
+    content: '';
+
+    position: absolute;
+    bottom: -0.25em;
+    left: 0;
+    width: 100%;
+    height: 0.25em;
+
+    border-radius: 1em;
+
+    background-color: #fc4349;
+
+    transform: scale(0, 1);
+    transform-origin: top left;
+
+    transition: transform 150ms ease-in-out;
+}
+
+a:hover::after{
+    transform: scale(1, 1);
+}

@@ -1,51 +1,55 @@
 <template>
-  <div>
-    <gallery-block class="gallery">
-      <wp-image v-for="(p, i) in projects"
-        :key="i"
-        :asset="p.featured_media"
-        size="full"
-        slot="slide"
-      >
-      </wp-image>
-    </gallery-block>
-  </div>
+  <main>
+    <cf-gallery :assets="heroes" slideshow>
+      <a slot-scope="{ index }">{{ projects[index].title }}</a>
+    </cf-gallery>
+  </main>
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
-import WpImage from '@/components/WPImage';
-import GalleryBlock from '@/components/GalleryBlock';
+  import store from '@/store/index.js';
 
-const { mapState, mapActions } = createNamespacedHelpers('showcase');
+  import { createNamespacedHelpers } from 'vuex';
+  import CfGallery from '@/components/CfGallery';
 
-export default {
-  computed: {
-    ...mapState([
-      'projects'
-    ])
-  },
+  const { mapState, mapGetters, mapMutations, mapActions } = createNamespacedHelpers('showcase');
 
-  methods: {
-    ...mapActions([
-      'fetchProjects'
-    ]),
-  },
+  export default {
+    name: 'Home',
+    computed: {
+      ...mapState([
+        'projects'
+      ]),
 
-  created(){
-    this.fetchProjects();
-  },
+      ...mapGetters([
+        'heroes'
+      ])
+    },
 
-  components: {
-    WpImage,
-    GalleryBlock
+    methods: {
+      ...mapActions({
+        fetchProjects: 'fetch'
+      }),
+
+      ...mapMutations({
+        clearProjects: 'clear'
+      })
+    },
+
+    created(){
+      this.fetchProjects();
+    },
+
+    components: {
+      CfGallery
+    }
   }
-}
 </script>
 
 <style scoped>
-  .gallery{
-    width: 100vw;
-    height: 100vh;
+  main {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: calc(100vh - 5em);
   }
 </style>

@@ -1,4 +1,6 @@
 import wp from '@/utils/wp';
+import api from '@/utils/contentful';
+import { map, path, pipe, pluck, isEmpty } from 'ramda';
 
 const showcase = {
   namespaced: true,
@@ -8,6 +10,19 @@ const showcase = {
   },
 
   getters: {
+    heroes(state){
+      const projects = state.projects;
+
+      return isEmpty(projects) ?
+        [] :
+        map(
+          path([
+            'hero',
+            'fields'
+          ]),
+          projects
+        );
+    }
   },
 
   mutations: {
@@ -15,32 +30,35 @@ const showcase = {
       state.projects = [...state.projects, ...payload]
     },
 
-    updateProjectFeaturedMedia(state, payload){
-      const isParent = (p) =>
-        p.id === payload.post;
+    clearProjects(state){
+      state.projects = [];
+    },
 
-      const project = state.projects.find(isParent);
+    update(state, payload){
+      state.projects = [...state.projects, ...payload];
+    },
 
-      project.featured_media = payload;
+    clear(state){
+      state.projects = [];
     }
   },
 
   actions: {
-    async fetchFeaturedMedia({ commit }, id){
-      const featuredMedia = await wp.media().id(id);
-      
-      commit('updateProjectFeaturedMedia', featuredMedia);
-    },
     async fetchProjects({ commit, dispatch }){
       const projects = await wp.projects()
-        .perPage(5);
-
-      const fetchFeaturedMedia = (p) =>
-        dispatch('fetchFeaturedMedia', p.featured_media)
-
-      projects.forEach(fetchFeaturedMedia);
+        .perPage(3);
 
       commit('updateProjects', projects);
+    },
+
+    async fetch({ commit }){
+      const response = await api.getEntries({
+        content_type: 'project'
+      });
+
+      const projects = pluck('fields', response.items);
+
+      commit('update', projects);
     }
   }
 }
