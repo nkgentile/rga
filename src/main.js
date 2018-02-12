@@ -4,8 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import mixins from '@/mixins';
 
 import css from './assets/global.css'
+
+Vue.mixin(mixins);
 
 Vue.config.productionTip = false
 

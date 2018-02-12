@@ -28,7 +28,6 @@
     cursor: pointer;
     
     overflow: hidden;
-
   }
   
   article > main{

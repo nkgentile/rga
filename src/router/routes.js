@@ -1,12 +1,13 @@
 import Home from './Home';
 import Project from './Project';
 import Projects from './Projects';
+import SplitHome from './SplitHome';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: SplitHome
   },
 
   {

@@ -1,11 +1,20 @@
 <template>
-   <img v-if="!isEmpty(asset)" :src="src" :width="width" :height="height" />
+   <async-image :class="$style.image"
+     :src="src"
+     :width="width"
+     :height="height"
+   />
 </template>
 
 <script>
   import { isEmpty } from 'ramda';
+  import AsyncImage from '@/components/AsyncImage';
 
   export default {
+    components: {
+      AsyncImage
+    },
+
     props: {
       asset: Object
     },
@@ -42,8 +51,8 @@
   }
 </script>
 
-<style scoped>
-  img {
+<style module>
+  .image {
     min-width: 100%;
     min-height: 100%;
 

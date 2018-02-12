@@ -3,9 +3,10 @@
     <template v-for="(a, i) in assets">
       <transition name="deck" mode="in-out">
         <cf-image
+          v-show="index === i"
           class="image"
-          v-show="i === index"
           :asset="a"
+          :key="i"
         />
       </transition>
     </template>
@@ -44,12 +45,16 @@
 
     data(){
       return {
-        metronome: undefined,
-        index: 0,
+        index: 0
       };
     },
 
     computed: {
+      metronome(){
+        return isEmpty(this.assets) && this.slideshow ?
+          false : this.start();
+      },
+
       asset(){
         return this.assets[this.index];
       },
@@ -63,21 +68,19 @@
       isEmpty,
 
       start(){
-        return isEmpty(this.assets) ?
-          false :
-          this.createMetronome(this.incrementIndex);
+        return this.createMetronome(this.incrementIndex);
       },
 
       stop(){
-        this.destroyMetronome();
+        return this.destroyMetronome();
       },
 
       createMetronome(f){
-        this.metronome = setInterval(f, 5000);
+        return setInterval(f, 5000);
       },
 
       destroyMetronome(){
-        this.metronome = clearInterval(this.metronome);
+        return clearInterval(this.metronome);
       },
 
       incrementIndex(n = 1){
@@ -91,16 +94,7 @@
       },
     },
 
-    mounted(){
-      if(this.slideshow){
-        this.start();
-      }
-    },
-
     destroyed(){
-      if(this.slideshow){
-        this.stop();
-      }
     },
 
     components: {
@@ -145,7 +139,6 @@
   }
 
   .image {
-    display: block;
     position: absolute;
     top: 0;
     left: 0;

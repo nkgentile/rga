@@ -1,15 +1,22 @@
 import wp from '@/utils/wp';
 import api from '@/utils/contentful';
-import { map, path, pipe, pluck, isEmpty } from 'ramda';
+import { map, path, pipe, pluck, isEmpty, head } from 'ramda';
 
 const showcase = {
   namespaced: true,
 
   state: {
-    projects: []
+    projects: {},
+    index: 0,
+    ids: [],
   },
 
   getters: {
+    active({ index, ids, projects }){
+      const id = ids[index];
+      return projects[id];
+    },
+
     heroes(state){
       const projects = state.projects;
 
@@ -22,12 +29,32 @@ const showcase = {
           ]),
           projects
         );
+    },
+
+    isFirstItem({ index }){
+      return index === 0;
+    },
+
+    isLastItem(state){
+      return state.index === state.ids.length - 1;
     }
   },
 
   mutations: {
-    updateProjects(state, payload){
-      state.projects = [...state.projects, ...payload]
+    receive(state, rawProjects){
+      const projects = rawProjects.map( p => ({
+        id: p.sys.id,
+        ...p.fields
+      }) );
+
+      projects.forEach( p => {
+        const id = p.id;
+
+        state.projects[id] = p;
+
+        if(!state.ids.includes(p.id))
+          state.ids = [id, ...state.ids]
+      } );
     },
 
     clearProjects(state){
@@ -40,6 +67,18 @@ const showcase = {
 
     clear(state){
       state.projects = [];
+    },
+
+    increment(state, n = 1){
+      state.index += n;
+    },
+
+    decrement(state, n = 1){
+      state.index -= n;
+    },
+
+    setIndex(state, i){
+      state.index = i;
     }
   },
 
@@ -53,12 +92,28 @@ const showcase = {
 
     async fetch({ commit }){
       const response = await api.getEntries({
-        content_type: 'project'
+        content_type: 'company'
       });
 
-      const projects = pluck('fields', response.items);
+      const company = head(response.items);
 
-      commit('update', projects);
+      commit('receive', company.fields.showcase);
+    },
+
+    next({ getters, commit }){
+      if(getters.isLastItem){
+        commit('setIndex', 0);
+      } else {
+        commit('increment');
+      }
+    },
+
+    prev({ getters, commit }){
+      if(getters.isFirstItem){
+        commit('setIndex', state.ids.length - 1);
+      } else {
+        commit('decrement');
+      }
     }
   }
 }

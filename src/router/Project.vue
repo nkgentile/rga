@@ -1,22 +1,21 @@
 <template>
-  <article v-if="!isEmpty(project)">
-    <figure class="hero">
+  <article v-if="!isEmpty(project)" :class="$style.container">
+    <figure :class="$style.hero">
       <cf-image :asset="project.hero.fields" />
     </figure>
-    <header>
+    <header :class="$style.title">
       <h1>{{ project.title }}</h1>
     </header>
-    <aside>
+    <aside :class="$style.back">
       <router-link to="/projects">
         <fa-icon :icon="farArrowAltCircleLeft"/> Back to Projects
       </router-link>
     </aside>
-    <main v-html="project.description">
-    </main>
-    <footer>
+    <main :class="$style.content" v-html="markdown(project.description)" />
+    <footer :class="$style.gallery">
       <template v-for="(a, i) in images">
         <figure :key="a.id"
-          class="image"
+          :class="$style.item"
           @click="openLightbox(i)"
         >
           <cf-image 
@@ -102,8 +101,8 @@
   }
 </script>
 
-<style scoped>
-  article {
+<style module>
+  .container {
     display: grid;
     grid-template-columns: 1fr minmax(var(--min-content-width), var(--max-content-width)) 1fr;
     grid-template-rows: minmax(25em, 50vmin) auto auto;
@@ -121,7 +120,7 @@
     grid-area: figure;
   }
 
-  header {
+  .title {
     grid-area: header;
     font-size: 2em;
     background-color: var(--neutral);
@@ -135,15 +134,15 @@
     padding: 0.5em;
   }
 
-  aside {
+  .back {
     grid-area: aside;
   }
 
-  main {
+  .content {
     grid-area: main;
   }
 
-  footer {
+  .gallery {
     grid-area: footer;
 
     display: grid;
@@ -152,8 +151,21 @@
     grid-auto-rows: 20em;
   }
 
-  @media screen and (min-width: 900px) {
-    article {
+  .item {
+    overflow: hidden;
+  }
+
+  .item > * {
+    cursor: pointer;
+    transition: 100ms transform ease-in-out;
+  }
+
+  .item > .image:hover{
+    transform: scale(1.01);
+  }
+
+  @media screen and (min-width: 1260px) {
+    .container {
       grid-template-areas: 
         "figure figure  figure"
         "...    header  ..."
@@ -162,11 +174,11 @@
         "...    ...     ...";
     }
 
-    aside {
+    .back {
       justify-self: self-end;
     }
 
-    footer {
+    .gallery {
       grid-template-columns: repeat(3, 1fr);
     }
   }

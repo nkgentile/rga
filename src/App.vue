@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <header>
-    <nav-bar/>
-    </header>
     <transition name="fade" mode="out-in" appear>
       <keep-alive>
         <router-view/>
@@ -12,6 +9,7 @@
 </template>
 
 <script>
+  import mixins from '@/mixins';
   import NavBar from '@/components/NavigationBar';
 
   export default {
@@ -19,14 +17,15 @@
 
     components: {
       NavBar
-    }
+    },
   }
 </script>
 
 <style scoped>
   #app {
     display: grid;
-    grid-template-rows: 5em 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(100vh, auto);
   }
 
   header {
