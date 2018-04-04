@@ -1,12 +1,9 @@
 <template>
   <article :class="$style.container">
     <header :class="$style.header">
-      <fa-icon
-        :icon="categoryIcon"
+      <category-icon
+        :category="project.category"
         size="3x"
-        transform="shrink-8"
-        :mask="fasCircle"
-        :class="$style.icon"
       />
       <h1 :class="$style.title">{{ project.title }}</h1>
       <h2 :class="$style.city">{{ project.city }}</h2>
@@ -17,7 +14,7 @@
 
     <footer>
       <router-link
-        :to="`/projects/${project.id}`"
+        :to="`/projects/${project.slug}`"
         tag="h3"
         :class="$style.button"
       >
@@ -40,11 +37,14 @@
     faMapMarker as fasMapMarker,
     faCircle as fasCircle,
   } from '@fortawesome/fontawesome-free-solid';
+
+  import CategoryIcon from '@/components/CategoryIcon';
   
   export default {
     components: {
       FaLayers,
       FaIcon,
+      CategoryIcon,
     },
 
     props: {
@@ -82,7 +82,9 @@
 
     position: relative;
 
-    padding: 1em;
+    padding: 2em;
+
+    background-color: white;
   }
 
   .container > *:not(first-child){
@@ -91,10 +93,6 @@
 
   .header > *:not(first-child) {
     margin-top: 1vh;
-  }
-
-  .icon {
-    color: var(--accent);
   }
 
   .title {
@@ -107,5 +105,4 @@
 
   .button {
   }
-
 </style>

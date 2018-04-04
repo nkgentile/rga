@@ -10,16 +10,16 @@ export default {
   },
 
   state: {
-    project: {},
+    entity: {},
+    map: {},
     isLightboxOpen: true
   },
 
   getters: {
-    images(state){
-      const project = state.project;
+    images({ entity }){
 
-      return isEmpty(project) ?
-        [] : project.images.map(
+      return isEmpty(entity) ?
+        [] : entity.images.map(
           a => ({
             id: a.sys.id,
             ...a.fields
@@ -30,19 +30,23 @@ export default {
 
   mutations: {
     clear(state){
-      state.project = {};
+      state.entity= {};
     },
 
     update(state, payload){
-      state.project = payload;
-    }
+      state.entity = payload;
+    },
+
+    setMap(state, ref){
+      state.map = ref;
+    },
   },
 
   actions: {
-    async fetch({ commit }, id){
+    async fetch({ commit }, { slug }){
       const response = await api.getEntries({
         content_type: 'project',
-        'sys.id': id
+        'fields.slug': slug,
       });
 
       const project = head(response.items).fields;

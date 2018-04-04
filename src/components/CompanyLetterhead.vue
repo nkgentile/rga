@@ -1,7 +1,9 @@
 <template>
   <div :class="$style.container">
-    <h1 :class="$style.title">{{ company.name }}</h1>
-    <div :class="$style.intro" v-html="markdown(company.introduction)"/>
+    <img :src="logo" width="16" height="16"/>
+    <router-link to="/" tag="h1">
+      <a>{{ company.name }}</a>
+    </router-link>
   </div>
 </template>
 
@@ -37,10 +39,10 @@
 <style module>
   .container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: repeat(2, max-content);
     grid-template-rows: 1fr;
-    align-items: top;
-    justify-content: center;
+    grid-gap: 1em;
+    align-items: center;
   }
 
   .title {

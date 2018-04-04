@@ -1,6 +1,6 @@
 <template>
   <ul :class="$style.container">
-    <transition name="fade" mode="out-in">
+    <transition mode="out-in">
       <template v-for="(id, i) in ids">
         <info-item
           v-if="i === activeIndex"

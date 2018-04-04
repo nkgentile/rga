@@ -6,30 +6,44 @@ export default {
   namespaced: true,
 
   state: {
-    pages: []
+    entities: {},
+    ids: [],
+  },
+
+  getters: {
+    slug: ({ entities }) => (id) =>
+      entities.find( entity =>
+        entity.id === id
+      ),
   },
 
   mutations: {
-    update(state, payload){
-      state.pages = [ ...state.pages, ...payload ];
-    }
+    receive(state, entries){
+      entries.forEach( e => {
+        const page = {
+          ...e.sys,
+          ...e.fields,
+        };
+
+        const { id } = page;
+
+        const { entities, ids } = state;
+
+        entities[id] = page;
+
+        state.ids = ids.includes(id) ?
+          [...ids] : [...ids, id];
+      });
+    },
   },
 
   actions: {
-    async fetchPages({ commit }){
-      const pages = await wp.pages();
-
-      commit('updatePages', pages);
-    },
-
     async fetch({ commit }){
       const response = await api.getEntries({
-        content_type: 'page'
+        content_type: 'page',
       });
 
-      const pages = pluck('fields', response.items);
-
-      commit('update', pages);
-    }
+      commit('receive', response.items);
+    },
   }
 }

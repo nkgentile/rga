@@ -8,6 +8,9 @@ import projects from './projects';
 import pages from './pages';
 import categories from './categories';
 import company from './company';
+import social from './social';
+import members from './members';
+import member from './member';
 
 Vue.use(Vuex);
 
@@ -21,7 +24,10 @@ const store = new Vuex.Store({
     image,
     projects,
     pages,
-    categories
+    categories,
+    social,
+    members,
+    member,
   }
 });
 

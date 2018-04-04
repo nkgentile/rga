@@ -1,42 +1,65 @@
 <template>
-  <div id="app">
+  <main id="app">
+
+    <site-nav :class="$style.nav" />
+
     <transition name="fade" mode="out-in" appear>
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
+      <router-view/>
     </transition>
-  </div>
+
+    <site-footer/>
+
+  </main>
 </template>
 
 <script>
-  import mixins from '@/mixins';
-  import NavBar from '@/components/NavigationBar';
+  import { createNamespacedHelpers } from 'vuex';
+  const { mapState } = createNamespacedHelpers('route');
+
+  import SiteNav from '@/components/NavigationBar';
+  import SiteFooter from '@/components/SiteFooter';
 
   export default {
     name: 'app',
 
     components: {
-      NavBar
+      SiteNav,
+      SiteFooter,
+    },
+
+    computed: {
+      ...mapState([
+      ])
     },
   }
 </script>
 
 <style scoped>
   #app {
+
+    --nav-height: 5em;
+    --content-height: calc( 100vh - var(--nav-height) );
+
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(100vh, auto);
-  }
+    grid-template-rows:
+      var(--nav-height)
+      minmax(
+        var(--content-height),
+        auto
+      )
+      min-content;
 
-  header {
-    display: grid;
-    grid-template-columns: 1fr minmax(var(--min-content-width), var(--max-content-width)) 1fr;
-    grid-template-areas:
-      "... nav ...";
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12pt;
   }
+</style>
 
-  header > *:first-child{
-    grid-area: nav;
+<style module>
+  .nav {
+    padding: 1em;
   }
 
   .fade-enter-active {

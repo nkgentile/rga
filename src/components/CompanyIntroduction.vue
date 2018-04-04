@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
-    <h1 :class="$style.title">{{ company.name }}</h1>
-    <div :class="$style.intro" v-html="markdown(company.introduction)"/>
+    <img :class="$style.hero" :src="hero"/>
+    <span :class="$style.intro" v-html="markdown(company.introduction)"/>
   </div>
 </template>
 
@@ -10,6 +10,7 @@
   const { mapState, mapActions } = createNamespacedHelpers('company');
 
   import logo from '@/assets/logo.svg';
+  import hero from '@/assets/henning-witzel-38848-unsplash.jpg';
 
   export default {
     computed: {
@@ -19,7 +20,11 @@
 
       logo(){
         return logo;
-      }
+      },
+      
+      hero(){
+        return hero;
+      },
     },
 
     methods: {
@@ -37,18 +42,33 @@
 <style module>
   .container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr;
-    align-items: top;
+    grid-template-columns: minmax(min-content, 1fr);
+    grid-template-rows: max-content;
+    align-items: center;
     justify-content: center;
+
+    position: relative;
+    overflow: hidden;
+
+    padding: 5em;
+
+    color: white;
   }
 
-  .title {
-    font-size: 2vw;
-  }
+  .hero {
+    filter: blur(2px);
 
-  .logo {
-    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    object-fit: cover;
     object-position: center;
+
+  }
+
+  .intro {
+    max-width: 60ch;
+    z-index: 1;
   }
 </style>

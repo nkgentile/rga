@@ -1,0 +1,5 @@
+:root {
+  --min-content-width: 50ch;
+  --max-content-width: 80ch;
+  --grid-spacing: 1.33rem;
+}

@@ -6,7 +6,7 @@
           :active="i === activeIndex"
           :onClick="() => setIndex(i)"
         >
-          <h3>{{ projects[id].title }}</h3>
+          {{ projects[id].title }}
         </nav-item>
       </template>
     </ul>
@@ -51,22 +51,21 @@
 <style module>
   .container {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
     align-items: center;
   }
 
   .nav {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    grid-template-rows: 1fr;
+    grid-template-columns: min-content;
+    grid-auto-rows: 1fr;
     justify-content: space-evenly;
     align-items: center;
 
     position: relative;
 
     padding: 1em;
+
+    color: white;
   }
 
   .nav::after {
@@ -100,5 +99,4 @@
   .nav-item.active {
     color: var(--accent);
   }
-
 </style>

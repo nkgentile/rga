@@ -1,24 +1,19 @@
 @import './reset.css';
+@import './variables.css';
 @import './colors.css';
 @import './transitions.css';
 
-:root {
-  --min-content-width: 50ch;
-  --max-content-width: 80ch;
-}
-
-#app {
-  min-width: 100vw;
-  min-height: 100vh;
-
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 18px;
-}
 
 a, p {
   line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.25;
+}
+
+h1 {
+  text-transform: uppercase;
 }
 
 h1, h3 {
@@ -26,7 +21,15 @@ h1, h3 {
 }
 
 h2 {
+  color: var(--gray);
+}
+
+h3, h4 {
   color: var(--neutral);
+}
+
+h2, h4 {
+  font-weight: 100;
 }
 
 p:not(:first-of-type){
@@ -39,6 +42,7 @@ a, a:link, a:visited{
     position: relative;
 }
 
+/*
 a::after{
     content: '';
 
@@ -61,3 +65,4 @@ a::after{
 a:hover::after{
     transform: scale(1, 1);
 }
+*/

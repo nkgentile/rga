@@ -3,27 +3,35 @@
     <figure :class="$style.hero">
       <cf-image :asset="project.hero.fields" />
     </figure>
+
     <header :class="$style.title">
       <h1>{{ project.title }}</h1>
+      <h2>{{ project.city }}</h2>
     </header>
-    <aside :class="$style.back">
-      <router-link to="/projects">
-        <fa-icon :icon="farArrowAltCircleLeft"/> Back to Projects
-      </router-link>
-    </aside>
-    <main :class="$style.content" v-html="markdown(project.description)" />
-    <footer :class="$style.gallery">
-      <template v-for="(a, i) in images">
-        <figure :key="a.id"
-          :class="$style.item"
-          @click="openLightbox(i)"
-        >
-          <cf-image 
-            :asset="a"
-          />
-        </figure>
-      </template>
-    </footer>
+
+    <main
+      :class="$style.body"
+    >
+      <section
+        :class="$style.description"
+        v-html="markdown(project.description)"
+      />
+
+      <project-info
+        :class="$style.info"
+        :client="project.client"
+        :completed="project.completed"
+        :services="project.services"
+      />
+
+
+    </main>
+
+    <project-map
+      :class="$style.map"
+      :location="project.location"
+    />
+
     <cf-lightbox
       :assets="images"
     >
@@ -41,6 +49,9 @@
   import CfImage from '@/components/CFImage';
   import CfLightbox from '@/components/CFLightbox';
 
+  import ProjectInfo from '@/components/ProjectInfo';
+  import ProjectMap from '@/components/ProjectMap';
+
   import FaIcon from '@fortawesome/vue-fontawesome';
   import farArrowAltCircleLeft from '@fortawesome/fontawesome-free-regular/faArrowAltCircleLeft';
 
@@ -48,13 +59,15 @@
     components: {
       CfImage,
       FaIcon,
-      CfLightbox
+      CfLightbox,
+      ProjectInfo,
+      ProjectMap,
     },
 
     computed: {
-      ...mapState([
-        'project',
-      ]),
+      ...mapState({
+        project: 'entity',
+      }),
 
       ...mapGetters([
         'images'
@@ -66,7 +79,7 @@
 
       fasTimes(){
         return fasTimes;
-      }
+      },
     },
 
     methods: {
@@ -85,12 +98,12 @@
     },
 
     beforeRouteEnter({ params }, from, next){
-      store.dispatch('project/fetch', params.id);
+      store.dispatch('project/fetch', params);
       next();
     },
 
     beforeRouteUpdate({ params }, from, next){
-      this.fetchProject(params.id);
+      this.fetchProject(params);
       next();
     },
 
@@ -103,83 +116,53 @@
 
 <style module>
   .container {
+    --spacing: 3em;
+
     display: grid;
-    grid-template-columns: 1fr minmax(var(--min-content-width), var(--max-content-width)) 1fr;
-    grid-template-rows: minmax(25em, 50vmin) auto auto;
-    grid-gap: 2em 3em;
-    grid-template-areas:
-      "figure figure  figure"
-      "...    header  ..."
-      "...    aside   ..."
-      "...    main    ..."
-      "footer    footer  footer"
-      "...    ...     ...";
+    grid-gap: var(--spacing);
+    grid-template-rows:
+      minmax(20em, 80vh)
+      min-content;
   }
 
   .hero {
-    grid-area: figure;
+  }
+
+  .hero > * {
+    min-width: 100%;
+    min-height: 100%;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: cover;
+    object-position: center;
   }
 
   .title {
-    grid-area: header;
     font-size: 2em;
-    background-color: var(--neutral);
-    border-bottom: 0.25em solid var(--accent);
-    color: white;
-
-    margin-top: -2em;
-
     text-align: center;
-
-    padding: 0.5em;
   }
 
-  .back {
-    grid-area: aside;
-  }
-
-  .content {
-    grid-area: main;
-  }
-
-  .gallery {
-    grid-area: footer;
-
+  .body {
     display: grid;
-    grid-template-columns: 100vw;
-    grid-gap: 0.25em;
-    grid-auto-rows: 20em;
+    justify-content: center;
+    padding: 0 1em;
+    grid-gap: var(--spacing);
   }
 
-  .item {
-    overflow: hidden;
-  }
-
-  .item > * {
-    cursor: pointer;
-    transition: 100ms transform ease-in-out;
-  }
-
-  .item > .image:hover{
-    transform: scale(1.01);
-  }
-
-  @media screen and (min-width: 1260px) {
-    .container {
-      grid-template-areas: 
-        "figure figure  figure"
-        "...    header  ..."
-        "aside  main    ..."
-        "footer    footer  footer"
-        "...    ...     ...";
+  @media screen and (min-width: 1045px) {
+    .body {
+      grid-template-columns:
+        var(--max-content-width)
+        max-content
+      ;
     }
+  }
 
-    .back {
-      justify-self: self-end;
-    }
+  .info {
+  }
 
-    .gallery {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .description {
   }
 </style>

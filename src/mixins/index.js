@@ -1,7 +1,8 @@
+import Vue from 'vue';
 import { isEmpty, isNil, complement } from 'ramda';
 import markdown from '@/utils/marked';
 
-export default {
+const mixins = {
   methods: {
     isEmpty,
     isNotEmpty: complement(isEmpty),
@@ -10,6 +11,7 @@ export default {
       return this.isNil(string) ?
         string : markdown(string);
     }
-
   }
 };
+
+Vue.mixin(mixins);

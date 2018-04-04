@@ -53,13 +53,14 @@
 
 <style module>
   .image {
-    min-width: 100%;
-    min-height: 100%;
+    display: block;
+    //min-width: 100%;
+    //min-height: 100%;
 
-    max-width: 100%;
-    max-height: 100%;
+    //max-width: 100%;
+    //max-height: 100%;
 
-    object-fit: cover;
-    object-position: center;
+    //object-fit: cover;
+    //object-position: center;
   }
 </style>

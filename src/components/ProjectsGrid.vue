@@ -1,41 +1,66 @@
 <template>
-   <transition-group tag="section" name="slide-up">
-    <rga-card v-for="(p, i) in projects"
-      :key="p.id"
-      :to="`projects/${p.id}`"
-    >
-      <wp-image :id="p.featured_media"/>
-      <a slot="footer">{{ p.title.rendered }}</a>
-    </rga-card>
-  </transition-group>
+  <section :class="$style.container">
+    <template v-for="(id, i) in ids">
+      <project-card
+        :project="projects[id]"
+        :class="$style.project"
+        :key="id"
+      >
+      </project-card>
+    </template>
+  </section>
 </template>
 
 <script>
-  import WpImage from '@/components/WPImage';
-  import RgaCard from '@/components/RGACard';
-
   import { createNamespacedHelpers } from 'vuex';
-  const { mapState, mapActions } = createNamespacedHelpers('projects');
+  const { mapState, mapGetters, mapActions } = createNamespacedHelpers('projects');
+
+  import store from '@/store';
+
+  import RgaCard from '@/components/RGACard';
+  import CfImage from '@/components/CFImage';
+  import ProjectCard from '@/components/ProjectsGridItem';
+
 
   export default {
     components: {
       RgaCard,
-      WpImage
+      CfImage,
+      ProjectCard,
     },
 
     computed: {
       ...mapState([
-        'projects'
+        'projects',
+        'ids',
       ])
     },
 
     methods: {
-      ...mapActions([
-        'fetchProjects'
-      ])
-    }
+      ...mapActions({
+        fetchProjects: 'fetch',
+      })
+    },
+
+    created(){
+      this.fetchProjects();
+    },
   }
 </script>
 
-<style scoped>
+<style module>
+  .container {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(
+        20em,
+        1fr
+      ) 
+    );
+    grid-gap: calc( 3 * var(--grid-spacing) );
+
+    padding: var(--grid-spacing);
+  }
+
 </style>

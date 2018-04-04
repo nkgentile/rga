@@ -6,7 +6,8 @@ export default {
   namespaced: true,
 
   state: {
-    projects: [],
+    projects: {},
+    ids: [],
     page: 0,
     total: 1,
     perPage: 100,
@@ -17,17 +18,23 @@ export default {
     offset(state){
       return state.perPage * state.page;
     },
-
-    heroes(state){
-      const toHero = pathOr({}, ['hero', 'fields']);
-
-      return map(toHero, state.projects);
-    }
   },
 
   mutations: {
-    update(state, payload){
-      state.projects = [...state.projects, ...payload];
+    receive(state, rawProjects){
+      const projects = rawProjects.map( p => ({
+        id: p.sys.id,
+        ...p.fields
+      }) );
+
+      projects.forEach( p => {
+        const id = p.id;
+
+        state.projects[id] = p;
+
+        if(!state.ids.includes(p.id))
+          state.ids = [id, ...state.ids]
+      } );
     },
 
     incrementPage(state){
@@ -47,20 +54,14 @@ export default {
     async fetch({ state, getters, commit }){
       const response = await api.getEntries({
         content_type: 'project',
+        order: 'fields.completed',
         skip: getters.offset,
         limit: state.perPage
       });
-      console.log(response);
 
       commit('setTotal', response.total)
 
-      const projects = response.items.map(
-        a => ({
-          id: a.sys.id,
-          ...a.fields
-        })
-      );
-      commit('update', projects);
+      commit('receive', response.items);
     }
   }
 }

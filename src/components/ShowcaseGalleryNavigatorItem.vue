@@ -60,6 +60,8 @@
   .item {
     cursor: pointer;
     text-align: center;
+    writing-mode: vertical-lr;
+
 
     position: relative;
   }
